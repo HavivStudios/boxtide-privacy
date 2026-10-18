@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boxtide - Privacy policy</title>
+<!-- Generated from Docs/store/PRIVACY.md by node tools/store/render-privacy.js. Edit the Markdown, not this file. -->
+<style>
+body{font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#1b1f24;background:#f6f4ef;max-width:46rem;margin:0 auto;padding:1.5rem 1.25rem 4rem}
+h1{font-size:1.7rem;margin:.5rem 0 1rem}h2{font-size:1.25rem;margin-top:2rem}h3{font-size:1.05rem}
+table{border-collapse:collapse;width:100%;font-size:.92rem;margin:1rem 0}th,td{border:1px solid #cfcac0;padding:.45rem .55rem;text-align:left;vertical-align:top}th{background:#e9e5dc}
+code{font-size:.88em;background:#e9e5dc;padding:.05rem .3rem;border-radius:3px}blockquote{margin:1rem 0;padding:.25rem 1rem;border-left:4px solid #2f6f8f;background:#eef3f5}
+hr{border:0;border-top:1px solid #cfcac0;margin:2rem 0}a{color:#2f6f8f}
+</style>
+</head>
+<body>
+<h1 id="boxtide---privacy-policy">Boxtide - Privacy policy</h1>
+<ul>
+<li><strong>App:</strong> Boxtide (<code>com.havivstudios.boxtide</code>)</li>
+<li><strong>Publisher:</strong> HavivStudios (Adi Haviv)</li>
+<li><strong>Contact:</strong> havivgamestudios@gmail.com</li>
+<li><strong>Effective:</strong> 2026-10-18 (with version 1.0.0 of the game)</li>
+<li><strong>Version of this document:</strong> 1 (see <a href="#changes">Changes</a> at the end)</li>
+</ul>
+<p>This is the page to host at the address the Play listing gives as the privacy policy (<code>Docs/store/CLOSE.md</code> has the step). Every claim in it is a claim about this game's build, and <code>node tools/store/sdk-check.js</code> fails if the build carries a library this page does not name.</p>
+<hr>
+<h2 id="the-short-version">The short version</h2>
+<p>Boxtide is a single-player puzzle game. Your progress is a file on your own phone. The game has no account of its own and never asks for your name, email, contacts, photos or location. The game itself makes no network calls: whatever leaves the phone leaves through one of these Google services.</p>
+<ul>
+<li><strong>AdMob</strong> shows rewarded ads you choose to watch, and interstitial ads between levels. It starts at every launch, after Google's consent check, so that an ad is ready when you want one.</li>
+<li><strong>Firebase</strong> receives gameplay stats and crash reports so the game can be balanced and fixed. It only does so once the consent check allows it, and never while <strong>Share gameplay stats</strong> in Settings is off. It is never used for ads.</li>
+<li><strong>Play Games</strong> holds your cloud save, achievements and Night Shift score, only while you are signed in to Play Games.</li>
+<li><strong>Play Billing</strong> handles a purchase, inside Google Play's own sheet.</li>
+</ul>
+<hr>
+<h2 id="the-services-this-game-talks-to">The services this game talks to</h2>
+<table>
+<thead><tr><th>Service</th><th>SDK in the build</th><th>What reaches it</th></tr></thead>
+<tbody>
+<tr><td>Google AdMob</td><td>Google Mobile Ads SDK, with Google's User Messaging Platform (the consent message)</td><td>From every launch, after the consent check: your device's IP address, which can estimate a general location; your advertising ID and app set ID; how you use the app and its ads (app launches, taps, ad views); and performance data such as launch time. Google uses these for advertising, analytics and fraud prevention.</td></tr>
+<tr><td>Google Firebase</td><td>Firebase App, Firebase Analytics, Firebase Crashlytics</td><td>Only after the consent check allows it, and never while <strong>Share gameplay stats</strong> is off: the game's own gameplay events (below); random installation ids Firebase creates (never the advertising ID: its collection is switched off in the build); the device model, Android version and language; a coarse location (country or region) that Google derives from the IP address; how the app was installed (the Play install referrer); and, when the game crashes, the stack trace, the device state at that moment and the last gameplay events before it.</td></tr>
+<tr><td>Google Play Games Services</td><td>Play Games Services (Google's Play Games plugin and its Nearby library)</td><td>Only while you are signed in: your Play Games name and avatar, your save file, your achievements, your Night Shift best score, and your progress counts for Play's Game Stats. Nearby comes in with the Play Games plugin; the game uses none of it.</td></tr>
+<tr><td>Google Play Billing</td><td>Google Play Billing Library, through Unity IAP</td><td>The product you are buying. The payment happens inside Google Play's own sheet.</td></tr>
+</tbody>
+</table>
+<p>Nothing else in the build sends data anywhere:</p>
+<ul>
+<li><strong>Google Play services</strong> and <strong>Unity Gaming Services Core</strong> are the shared parts the SDKs above stand on. Unity Gaming Services Core comes in with Unity IAP; the game never starts Unity's online services, so nothing reaches Unity through it.</li>
+<li><strong>AndroidX</strong>, <strong>Kotlin</strong> and the <strong>Unity engine packages</strong> are building blocks with no network of their own.</li>
+<li>Unity's own analytics, crash reporting and performance reporting are switched off, and the engine is told not to send Unity hardware statistics.</li>
+<li>The project's <strong>development tools</strong> (the editor bridge MCP for Unity and HavivStudios' unity-tools) collect nothing in the game.</li>
+</ul>
+<p>There is no attribution SDK, no social SDK and no other ad network.</p>
+<hr>
+<h2 id="what-is-stored-on-your-phone">What is stored on your phone</h2>
+<p>All of it is in the app's own private folder, which no other app can read and which Android deletes when Boxtide is uninstalled.</p>
+<table>
+<thead><tr><th>File</th><th>What it is</th></tr></thead>
+<tbody>
+<tr><td><code>save.json</code></td><td>Your game: levels and stars, coins, cranes and boosters, dailies and streak, Night Shift bests, postcards, achievements, purchases (the transaction ids, so a purchase is granted only once), and your settings.</td></tr>
+<tr><td><code>save.json.bak</code></td><td>The previous <code>save.json</code>, kept by every write so that one bad write cannot cost you the game.</td></tr>
+</tbody>
+</table>
+<p>Firebase and the Google SDKs keep their own small files in the same folder: Firebase's random installation ids and any stats or crash report waiting for a connection, and UMP's record of your consent answer. They go when the app is uninstalled.</p>
+<p>The game reads no contacts, photos, files of yours, calendar, microphone or camera, and never asks for your location. It asks you for no permission at all at first launch.</p>
+<hr>
+<h2 id="adverts-admob">Adverts (AdMob)</h2>
+<ul>
+<li><strong>Rewarded ads</strong> are always your choice: double the coins on a result, a crane when you are one move short, a rescue in Night Shift, and the first continue after a jam. The reward is given only when the ad finishes; nothing is taken if you skip one.</li>
+<li><strong>Interstitial ads</strong> show only between levels, when you leave a finished level's result. Never in your first session, never before level 15, never when a level starts, at least 90 seconds apart and 30 seconds after a rewarded ad, and at most 6 a session and 12 a day. <strong>Remove ads</strong> (a purchase) stops them for good and keeps the rewarded ones on offer.</li>
+<li><strong>No banners.</strong></li>
+<li><strong>Consent comes first.</strong> Before AdMob starts, the game runs Google's User Messaging Platform consent check and shows its consent form where the law requires one. Your answer decides whether ads may be personalised. If the check says ads may not be requested at all, AdMob is not started.</li>
+<li><strong>The advertising ID.</strong> AdMob reads your device's Google advertising ID (the reason for the <code>AD_ID</code> permission). It is Google's identifier, and you can reset or delete it.</li>
+<li><strong>Changing your mind.</strong> Settings &gt; <strong>Ad privacy</strong> &gt; <strong>Choices</strong> reopens the consent form where Google offers one (the EEA, the UK and Switzerland). Everywhere, Android's <strong>Settings &gt; Privacy &gt; Ads</strong> lets you delete your advertising ID or opt out of personalised ads.</li>
+<li><strong>Pre-release builds show Google's test ads</strong>, not real ones.</li>
+</ul>
+<p>Google's ad-data practices: <a href="https://policies.google.com/technologies/ads">https://policies.google.com/technologies/ads</a>.</p>
+<hr>
+<h2 id="gameplay-stats-and-crash-reports-firebase">Gameplay stats and crash reports (Firebase)</h2>
+<p>The game sends its own gameplay stats to Firebase Analytics and crash reports to Firebase Crashlytics, so that one developer can see where players get stuck or stop, and what crashes, and then fix the game. They are not used for ads.</p>
+<ul>
+<li><strong>What a stat is.</strong> A short named event from the game: a level started or finished (its number, stars and moves), a jam, a booster or continue used, the store opened, a purchase granted (the product), an ad shown or rewarded, a postcard piece, a daily finished, a Night Shift run's score, a session started. The full list is <code>Docs/telemetry/EVENTS.md</code> in the game's source. Nothing you typed, no save file, no name.</li>
+<li><strong>Who it is tied to.</strong> A random id Firebase creates when the game is installed. It is not your name, not your Google account and not your advertising ID, and the game never joins it with anything else. A reinstall gets a new one.</li>
+<li><strong>Nothing before consent.</strong> The build tells Firebase, before any of the game's code runs, to store nothing and collect nothing. The game changes that only once Google's consent check has finished. Where the GDPR applies (the EEA, the UK and Switzerland), stats are kept only if you agreed there to the storing of information on your device. Elsewhere they are kept unless you switch them off. Ad storage, ad user data and ad personalisation are never granted to Firebase. Crash reports follow the same answer as the stats.</li>
+<li><strong>How to turn it off.</strong> Switch off <strong>Share gameplay stats</strong> in Settings. From that moment no stats and no crash reports are sent, and the answer is kept in your save until you change it. Turning down consent later in <strong>Ad privacy</strong> does the same.</li>
+<li><strong>How long it is kept.</strong> Firebase Analytics keeps event data for Google Analytics' default retention (two months); Crashlytics keeps crash reports for 90 days. The data is not exported anywhere else.</li>
+<li><strong>Deleting it.</strong> Because the id is random and the game never shows it, there is no way to find "your" stats by your name or email. Switching off <strong>Share gameplay stats</strong> stops new ones; what was already sent expires as described above.</li>
+</ul>
+<p>Google's handling of Firebase data: <a href="https://firebase.google.com/support/privacy">https://firebase.google.com/support/privacy</a>.</p>
+<hr>
+<h2 id="play-games-cloud-save-achievements-night-shift">Play Games (cloud save, achievements, Night Shift)</h2>
+<ul>
+<li><strong>Nothing is sent unless you are signed in to Play Games.</strong> Sign-in is Google's: if your Play Games profile allows automatic sign-in, Google signs you in when the game starts; otherwise only Settings &gt; <strong>Play Games</strong> &gt; <strong>Sign in</strong> asks. Not signed in, the game carries on fully offline.</li>
+<li><strong>Cloud save.</strong> A copy of <code>save.json</code> goes into your own Play Games saved-games slot, named <code>boxtide</code>, so a new phone can pick up where the old one left off. If the two differ, the game merges them and keeps the better of each.</li>
+<li><strong>Achievements, the Night Shift leaderboard and Game Stats.</strong> Achievements you earn and your Night Shift best score go to Play Games. The leaderboard shows your Play Games name and score to other players, as Play Games leaderboards do. Your Voyage progress and a few counts (ships sent, three-star finishes, dailies solved, crane lifts, your best Night Shift) go to Play's Game Stats.</li>
+<li><strong>Your name.</strong> The game reads your Play Games name only to show it in Settings, and never stores it.</li>
+<li><strong>Deleting it.</strong> The slot, achievements and scores belong to your Google account. Google's Play Games settings let you delete a game's data.</li>
+</ul>
+<p>Google's handling of that data: <a href="https://policies.google.com/privacy">https://policies.google.com/privacy</a>.</p>
+<hr>
+<h2 id="purchases-google-play-billing">Purchases (Google Play Billing)</h2>
+<p>Coins, cranes, boosters, a starter pack and remove-ads can be bought. The purchase runs inside Google Play's own sheet: <strong>no card number, billing address or payment detail ever reaches this game or its developer.</strong> The game learns which product was bought, so it can grant it once, and keeps the transaction id in your save. The store sheet's <strong>Restore purchases</strong> asks Play for what you already own. Firebase Analytics, where it is allowed to run, records that a purchase was granted (the product).</p>
+<hr>
+<h2 id="no-accounts-no-profiles">No accounts, no profiles</h2>
+<p>Boxtide has no login of its own and builds no profile of you. It does not sell data, does not share it with data brokers, and has no advertising partner beyond AdMob. What AdMob does with the data it receives, including personalised ads where your consent allows it, is set out above and governed by Google's ad-data practices.</p>
+<hr>
+<h2 id="children">Children</h2>
+<p>Boxtide is a calm puzzle game for adults and teenagers. <strong>It is not directed at children under 13</strong>, its audience is 13 and over, and it is not in Google Play's Designed for Families programme. The game tells AdMob that its users are not under the age of consent and that its requests are not child-directed. If you believe a child under 13 has used the game and data reached one of the services above, write to the contact address and we will help you remove it.</p>
+<hr>
+<h2 id="your-choices-in-one-list">Your choices, in one list</h2>
+<ul>
+<li>Switch off <strong>Share gameplay stats</strong> in Settings: no gameplay stats or crash reports from then on. Declining storage on your device in the consent form, where it is shown, does the same.</li>
+<li>Decline personalised ads in the consent form where it is shown, and change that answer later in Settings &gt; <strong>Ad privacy</strong>.</li>
+<li>Delete or opt out of your advertising ID in Android's <strong>Settings &gt; Privacy &gt; Ads</strong>.</li>
+<li>Buy <strong>Remove ads</strong> to stop interstitial ads.</li>
+<li>Never sign in to Play Games, and nothing is sent to it.</li>
+<li>Delete the game's Play Games data from your Google account's Play Games settings.</li>
+<li>Clear the app's storage in Android's settings, or uninstall Boxtide: Android removes every file listed above.</li>
+</ul>
+<hr>
+<h2 id="contact">Contact</h2>
+<p>Questions, or a request about data this app holds: <strong>havivgamestudios@gmail.com</strong>. There is no account to close and no server of ours to delete you from; the levers that exist are the ones above, and we will help you find them.</p>
+<hr>
+<h2 id="changes">Changes</h2>
+<table>
+<thead><tr><th>Date</th><th>Version</th><th>What changed</th></tr></thead>
+<tbody>
+<tr><td>2026-10-18</td><td>1</td><td>First published, with version 1.0.0.</td></tr>
+</tbody>
+</table>
+<p>Any later change is a new row here and a new effective date at the top.</p>
+</body>
+</html>
