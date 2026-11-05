@@ -19,10 +19,10 @@ hr{border:0;border-top:1px solid #cfcac0;margin:2rem 0}a{color:#2f6f8f}
 <li><strong>App:</strong> Boxtide (<code>com.havivstudios.boxtide</code>)</li>
 <li><strong>Publisher:</strong> HavivStudios (Adi Haviv)</li>
 <li><strong>Contact:</strong> havivgamestudios@gmail.com</li>
-<li><strong>Effective:</strong> 2026-11-03 (with version 1.7.1 of the game; it covers version 1.6.0 and later)</li>
-<li><strong>Version of this document:</strong> 3 (see <a href="#changes">Changes</a> at the end)</li>
+<li><strong>Effective:</strong> 2026-11-05 (it covers version 1.6.0 of the game on Android and the first iPhone version)</li>
+<li><strong>Version of this document:</strong> 4 (see <a href="#changes">Changes</a> at the end)</li>
 </ul>
-<p>This is the page to host at the address the Play listing gives as the privacy policy (<code>Docs/store/PRODUCTION.md</code> P8 has the step). Every claim in it is a claim about this game's build, and <code>node tools/store/sdk-check.js</code> fails if the build carries a library this page does not name, or if the game sends a gameplay stat this page does not list by name.</p>
+<p>This is the page to host at the address the Play listing and the App Store listing give as the privacy policy (<code>Docs/store/PRODUCTION.md</code> P8 and <code>Docs/store/appstore/SUBMIT.md</code> S13 have the steps). Every claim in it is a claim about this game's build, and <code>node tools/store/sdk-check.js</code> fails if the build carries a library this page does not name, or if the game sends a gameplay stat this page does not list by name.</p>
 <hr>
 <h2 id="the-short-version">The short version</h2>
 <p>Boxtide is a single-player puzzle game. Your progress is a file on your own phone. The game has no account of its own and never asks for your name, email, contacts, photos or location. The game itself makes no network calls: whatever leaves the phone leaves through one of these Google services.</p>
@@ -31,6 +31,7 @@ hr{border:0;border-top:1px solid #cfcac0;margin:2rem 0}a{color:#2f6f8f}
 <li><strong>Firebase</strong> receives gameplay stats and crash reports so the game can be balanced and fixed, and the game asks it for a short list of tuning numbers (Remote Config). It only does so once the consent check allows it, and never while <strong>Share gameplay stats</strong> in Settings is off. It is never used for ads.</li>
 <li><strong>Play Games</strong> holds your cloud save, achievements and Night Shift score, only while you are signed in to Play Games.</li>
 <li><strong>Play Billing</strong> handles a purchase, inside Google Play's own sheet.</li>
+<li><strong>On iPhone</strong>, Apple's services take the place of the Google ones that only Android has: <strong>Game Center</strong> for achievements and the Night Shift score, <strong>iCloud</strong> for your cloud save, and the <strong>App Store</strong> for purchases. AdMob and Firebase work as on Android. See <a href="#on-iphone">On iPhone</a>.</li>
 </ul>
 <hr>
 <h2 id="the-services-this-game-talks-to">The services this game talks to</h2>
@@ -52,6 +53,28 @@ hr{border:0;border-top:1px solid #cfcac0;margin:2rem 0}a{color:#2f6f8f}
 <li>The project's <strong>development tools</strong> (the editor bridge MCP for Unity and HavivStudios' unity-tools) collect nothing in the game.</li>
 </ul>
 <p>There is no attribution SDK, no social SDK and no other ad network.</p>
+<hr>
+<h2 id="on-iphone">On iPhone</h2>
+<p>The iPhone version is the same game with the same rules. Where Android uses a Google service that has no place on an iPhone, the iPhone version uses Apple's own:</p>
+<table>
+<thead><tr><th>Service</th><th>SDK in the build</th><th>What reaches it</th></tr></thead>
+<tbody>
+<tr><td>Google AdMob</td><td>Google Mobile Ads SDK for iOS, with Google's User Messaging Platform</td><td>As on Android (above). The advertising identifier (IDFA) is read only if you allow tracking when iOS asks (App Tracking Transparency, below); otherwise AdMob gets no advertising identifier and shows non-personalised ads.</td></tr>
+<tr><td>Google Firebase</td><td>Firebase Analytics, Firebase Crashlytics and Firebase Remote Config for iOS</td><td>As on Android, under the same consent answer and <strong>Share gameplay stats</strong> switch. The build switches off Firebase's collection of the advertising identifier and of the vendor identifier (IDFV). It sends the device model and iOS version instead of Android's.</td></tr>
+<tr><td>Apple Game Center</td><td>GameKit (part of iOS)</td><td>Only while you are signed in to Game Center on the device: your achievements and your Night Shift best score. The game reads your Game Center name only to show it in Settings, and never reads your player id. Signed out, nothing is sent and the Game Center row is hidden.</td></tr>
+<tr><td>Apple iCloud</td><td>CloudKit (part of iOS)</td><td>Only while you are signed in to iCloud: one copy of <code>save.json</code> in the app's private iCloud database, which only your Apple Account can read. The game never writes over a newer or damaged copy. Not signed in, the game plays on the save on your phone.</td></tr>
+<tr><td>Apple App Store</td><td>StoreKit (part of iOS), through Unity IAP</td><td>The product you are buying. The payment happens inside Apple's own sheet; the game checks Apple's signature on the purchase on your device and keeps the transaction id in your save. <strong>Restore purchases</strong> in Settings and in the store asks the App Store for what you already own.</td></tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Google support libraries</strong> (GoogleUtilities, GoogleDataTransport, nanopb and Promises) come in with Firebase and carry the Firebase data above; they collect nothing of their own.</li>
+<li><strong>App Tracking Transparency.</strong> After Google's consent form, iOS asks once whether Boxtide may track you across other companies' apps and websites, for ads. The game shows no screen of its own before it and gives nothing for a "yes". A "no" still shows ads, just less matched to you. You can change the answer any time in iOS <strong>Settings &gt; Privacy &amp; Security &gt; Tracking</strong>.</li>
+<li><strong>Notifications</strong> are local, as on Android: iOS asks for permission only after you say yes to the game's own question, and nothing is sent to a push server.</li>
+<li><strong>The share button</strong> opens iOS's own share sheet with your result text; the game sends nothing itself.</li>
+<li><strong>Stored on your phone.</strong> The same files as on Android, in the app's own container, which iOS deletes when Boxtide is removed. The game's settings live in the app's own preferences.</li>
+<li><strong>Apple's privacy manifest.</strong> The build carries a privacy manifest that declares the same data as this page, for the App Store's privacy label.</li>
+</ul>
+<p>Apple's handling of Game Center, iCloud and App Store data: <a href="https://www.apple.com/legal/privacy/">https://www.apple.com/legal/privacy/</a>.</p>
 <hr>
 <h2 id="what-is-stored-on-your-phone">What is stored on your phone</h2>
 <p>All of it is in the app's own private folder, which no other app can read and which Android deletes when Boxtide is uninstalled.</p>
@@ -177,7 +200,8 @@ hr{border:0;border-top:1px solid #cfcac0;margin:2rem 0}a{color:#2f6f8f}
 <li>Buy <strong>Remove ads</strong> to stop interstitial ads.</li>
 <li>Never sign in to Play Games, and nothing is sent to it.</li>
 <li>Delete the game's Play Games data from your Google account's Play Games settings.</li>
-<li>Clear the app's storage in Android's settings, or uninstall Boxtide: Android removes every file listed above.</li>
+<li>On iPhone: say no when iOS asks about tracking, or switch it off later in <strong>Settings &gt; Privacy &amp; Security &gt; Tracking</strong>; sign out of Game Center to send it nothing; delete the game's iCloud data in <strong>Settings &gt; [your name] &gt; iCloud &gt; Manage Account Storage</strong>.</li>
+<li>Clear the app's storage in Android's settings, or uninstall Boxtide: Android removes every file listed above. On iPhone, removing the app deletes its files the same way.</li>
 </ul>
 <hr>
 <h2 id="contact">Contact</h2>
@@ -188,10 +212,15 @@ hr{border:0;border-top:1px solid #cfcac0;margin:2rem 0}a{color:#2f6f8f}
 <thead><tr><th>Date</th><th>Version</th><th>What changed</th></tr></thead>
 <tbody>
 <tr><td>2026-10-18</td><td>1</td><td>First published, with version 1.0.0.</td></tr>
-<tr><td>2026-11-03</td><td>2</td><td>Brought up to version 1.4.1 of the game: every gameplay stat is now listed by name (the weekend events, the season pass, the coin shop and its paints, themes, skins, decorations and small items, the streak freeze, the new kinds of level, the home harbour, the interface language); the purchases now include the season's premium pass and the streak freeze, and each purchase's Google Play signature is checked on your device before it is granted; crash reports now say they cover native crashes, read with symbol files the developer uploads. No new service, no new kind of data, no change to consent.</td></tr>
-<tr><td>2026-11-03</td><td>3</td><td>Brought up to version 1.6.0 of the game: Firebase Remote Config fetches a fixed list of tuning numbers at launch, and Firebase A/B Testing may put a random installation id in a test group (a new section, <em>Tuning numbers</em>); the gameplay stats now include the High Season events (<code>deal_buy</code>, <code>tea_break</code>, <code>notify</code> and the others listed above). No new kind of personal data, no change to consent: Remote Config follows the same consent answer and <strong>Share gameplay stats</strong> switch as the stats.</td></tr>
+<tr><td>on publish</td><td>2</td><td>Brought up to version 1.4.1 of the game: every gameplay stat is now listed by name (the weekend events, the season pass, the coin shop and its paints, themes, skins, decorations and small items, the streak freeze, the new kinds of level, the home harbour, the interface language); the purchases now include the season's premium pass and the streak freeze, and each purchase's Google Play signature is checked on your device before it is granted; crash reports now say they cover native crashes, read with symbol files the developer uploads. No new service, no new kind of data, no change to consent.</td></tr>
+<tr><td>on publish</td><td>3</td><td>Brought up to version 1.6.0 of the game: Firebase Remote Config fetches a fixed list of tuning numbers at launch, and Firebase A/B Testing may put a random installation id in a test group (a new section, <em>Tuning numbers</em>); the gameplay stats now include the High Season events (<code>deal_buy</code>, <code>tea_break</code>, <code>notify</code> and the others listed above). No new kind of personal data, no change to consent: Remote Config follows the same consent answer and <strong>Share gameplay stats</strong> switch as the stats.</td></tr>
 </tbody>
 </table>
-<p>Any later change is a new row here and a new effective date at the top. Versions 2 and 3 were put up together on 2026-11-03; version 3 includes everything in version 2.</p>
+<table>
+<thead><tr><th>on publish</th><th>4</th><th>Covers the first iPhone version: a new section, <em>On iPhone</em>, names Apple's Game Center, iCloud (CloudKit) and App Store (StoreKit) and the iOS builds of the Google Mobile Ads SDK, the User Messaging Platform and Firebase; App Tracking Transparency is asked after the consent form. Android is unchanged.</th></tr></thead>
+<tbody>
+</tbody>
+</table>
+<p>Any later change is a new row here and a new effective date at the top. Versions 2, 3 and 4 have not been put up yet; version 4 includes everything in versions 2 and 3, and one push puts it up. Its Effective line and those rows read "on publish" until then; the push step sets the date.</p>
 </body>
 </html>
